@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://developers.google.com/maps/documentation/javascript/demos/demos.css">
+    <style>
+    /* Always set the map height explicitly to define the size of the div
+     * element that contains the map. */
+    .mimapa
+    {
+      width: 500px;
+      height: 500px;
+    }
+
+    #map {
+      height: 100%;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="mimapa">
+      <select id="list">
+        <option value="1">Tecnologia</option>
+        <option value="2">Jardineria</option>
+      </select>
+      <div id="map"></div>
+    </div>
+    <script>
+
+    var map;
+    var infowindow;
+    var markers = [];
+
+     function InitializeMap() {
+
+         var latlng = new google.maps.LatLng(40.5239216,-4.3778445);
+         var myOptions =
+         {
+             zoom: 9,
+             center: new google.maps.LatLng(40.2085, -3.713),
+             mapTypeId: google.maps.MapTypeId.ROADMAP,
+             mapTypeControl: false,
+             mapTypeControlOptions:
+             {
+                 style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                 poistion: google.maps.ControlPosition.TOP_RIGHT,
+                 mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.HYBRID, google.maps.MapTypeId.SATELLITE]
+             },
+             navigationControl: true,
+             navigationControlOptions:
+             {
+                 style: google.maps.NavigationControlStyle.ZOOM_PAN
+             },
+             draggable: false,
+             scaleControl: false,
+             disableDefaultUI: false,
+             disableDoubleClickZoom: false,
+             streetViewControl: true,
+             scrollwheel: false,
+             draggableCursor: 'point'
+         };
+         map = new google.maps.Map(document.getElementById("map"), myOptions);
+     }
+
+      function markicons(event) {
+
+         var ltlng = [];
+         var mensaje = [];
+
+         for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+         }
+
+         markers = [];
+
+         var x = this.selectedOptions[0].value;
+
+         switch (x) {
+
+             case "1": ltlng.push(new google.maps.LatLng(40.3894282,-3.7430483)); mensaje.push("ADECUACIÓN DE ALTERNATIVAS, S.L.");
+                       ltlng.push(new google.maps.LatLng(40.4779306,-3.7215386)); mensaje.push("ATENTO IMPULSA, SAU");
+                       ltlng.push(new google.maps.LatLng(40.4026543,-3.708712)); mensaje.push("CAPACITA SOLUCIONES DE COMUNICACION, S.L.");
+
+             case "2": ltlng.push(new google.maps.LatLng(40.3611208,-3.5457736)); mensaje.push("ASOCIACIÓN PADRES Y AMIGOS DE PERSONAS CON DISCAPACIDAD DE RIVAS"); break;
+
+         }
+
+         //map.setCenter(ltlng[0]);
+             for (var i = 0; i <= ltlng.length; i++) {
+                 marker = new google.maps.Marker({
+                 map: map,
+                 position: ltlng[i]
+             });
+
+             markers.push(marker);
+
+             (function (i, marker) {
+                 google.maps.event.addListener(marker, 'click', function () {
+                     if (!infowindow) {
+                         infowindow = new google.maps.InfoWindow();
+                     }
+                     infowindow.setContent(mensaje[i]);
+                     infowindow.open(map, marker);
+                 });
+             })(i, marker);
+         }
+     }
+
+     var miselect = document.querySelector("#list");
+     miselect.addEventListener('change',markicons);
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC327qAiLcrW3u7nAsLvyBpMYHkCJxVdvU&callback=InitializeMap" async defer></script>
+  </body>
+</html>
